@@ -4,12 +4,15 @@ __pycache__/
 *$py.class
 *.so
 
-# PyInstaller build artifacts (but keep dist/)
+# PyInstaller build artifacts
 build/
 *.spec
 
 # Output files (users generate these locally)
 output/
+
+# Bundled dependencies (too large for git, transfer separately)
+lib/
 
 # IDE
 .vscode/

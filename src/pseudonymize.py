@@ -14,6 +14,12 @@ import random
 import sys
 from pathlib import Path
 
+# Add the bundled lib folder to Python's path BEFORE importing pandas/openpyxl
+# This allows the script to work without pip install on restricted machines
+_lib_path = Path(__file__).parent.parent / "lib"
+if _lib_path.exists():
+    sys.path.insert(0, str(_lib_path))
+
 import pandas as pd
 
 # Add the src folder to path so imports work

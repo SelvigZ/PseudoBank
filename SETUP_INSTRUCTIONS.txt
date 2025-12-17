@@ -2,41 +2,32 @@
   PSEUDOBANK - SETUP INSTRUCTIONS
 ================================================================================
 
-This guide walks you through setting up and running PseudoBank on your machine.
-Read through the whole thing first, then follow the steps.
+This tool works on any machine with Python 3.x installed.
+NO pip install needed - all dependencies are bundled.
 
---------------------------------------------------------------------------------
+Just copy the folder and run!
+
+================================================================================
   WHAT YOU NEED
---------------------------------------------------------------------------------
+================================================================================
 
-1. Python 3.x installed on your machine
-2. The PseudoBank folder (from GitHub ZIP or git clone)
+1. Python 3.x installed on your machine (no pip needed!)
+2. The entire PseudoBank folder (copy the whole thing)
 3. A test Excel or CSV file to try it on
-4. Access to Command Prompt (cmd)
-
---------------------------------------------------------------------------------
-  SECURITY NOTE
---------------------------------------------------------------------------------
-
-This tool contains NO compiled executables (.exe files). Everything is plain
-text that you can open and inspect:
-
-  - pseudobank.bat     = Batch launcher (open in Notepad to see what it does)
-  - src/pseudonymize.py = Main Python code (fully readable)
-  - src/config.py       = Configuration settings
-
-This transparency ensures you can verify exactly what the tool does before
-running it on your secure machine.
 
 ================================================================================
   STEP 1: GET THE FILES ONTO YOUR MACHINE
 ================================================================================
 
-1. Go to: https://github.com/SelvigZ/PseudoBank
-2. Click the green "Code" button
-3. Click "Download ZIP"
-4. Transfer the ZIP file to your machine (if needed)
-5. Extract/unzip the folder to a location like C:\PseudoBank
+Copy the ENTIRE PseudoBank folder to your machine. This includes:
+  - pseudobank.bat      (the launcher)
+  - src/                (the Python scripts)
+  - lib/                (bundled dependencies - IMPORTANT!)
+  - sample_data/        (test files)
+  - output/             (where results go)
+
+The lib/ folder contains pandas, openpyxl, and other required libraries.
+This is why you don't need pip install - everything is already there.
 
 ================================================================================
   STEP 2: CHECK IF PYTHON IS INSTALLED
@@ -51,59 +42,29 @@ running it on your secure machine.
 
    python --version
 
-3. You should see something like: Python 3.11.4
+3. You should see something like: Python 3.12.4
 
 If you see "'python' is not recognized...":
    - Python is not installed
-   - Contact IT about getting Python installed, OR
-   - Download from python.org if you have permission
+   - Contact IT about getting Python installed
 
 ================================================================================
   STEP 3: RUN PSEUDOBANK
 ================================================================================
 
-You have two options:
-
---------------------------------------------------------------------------------
-  OPTION A: Use the Batch Launcher (Easiest)
---------------------------------------------------------------------------------
-
 1. Open Command Prompt
 
 2. Navigate to the PseudoBank folder:
 
-   cd C:\PseudoBank
+   cd C:\path\to\PseudoBank
 
 3. Run with your file:
 
    pseudobank.bat "C:\path\to\your\report.xlsx"
 
-   Or just run it and it will prompt you for the file path:
+   Or just run it and it will prompt you:
 
    pseudobank.bat
-
-The batch file will automatically:
-  - Check if Python is installed
-  - Install required libraries (pandas, openpyxl) if needed
-  - Run the sanitization tool
-
---------------------------------------------------------------------------------
-  OPTION B: Run Python Directly
---------------------------------------------------------------------------------
-
-1. Open Command Prompt
-
-2. Navigate to the PseudoBank folder:
-
-   cd C:\PseudoBank
-
-3. Install dependencies (first time only):
-
-   pip install -r requirements.txt
-
-4. Run the script:
-
-   python src/pseudonymize.py --input "C:\path\to\your\report.xlsx"
 
 ================================================================================
   STEP 4: FOLLOW THE PROMPTS
@@ -146,19 +107,14 @@ Open it in Excel and verify:
   - Selected columns now show fake names (Vendor_047, Program_093, etc.)
   - Dollar amounts are unchanged
   - Column headers are unchanged
-  - Dates are unchanged
 
 ================================================================================
-  STEP 6: TEST WITH SAMPLE DATA FIRST
+  TEST WITH SAMPLE DATA FIRST
 ================================================================================
 
 Before using your real data, test with the included sample:
 
   pseudobank.bat sample_data/test_report.csv
-
-Or:
-
-  python src/pseudonymize.py --input sample_data/test_report.csv
 
 This lets you see how the tool works without risking any real data.
 
@@ -173,16 +129,10 @@ Python isn't installed or isn't in your PATH.
 FIX: Contact IT about Python installation.
 
 --------------------------------------------------------------------------------
-ERROR: "'pip' is not recognized"
+ERROR: "No module named pandas" or similar
 --------------------------------------------------------------------------------
-FIX: Try using: python -m pip install -r requirements.txt
-
---------------------------------------------------------------------------------
-ERROR: "No module named pandas" or "No module named openpyxl"
---------------------------------------------------------------------------------
-Dependencies weren't installed.
-FIX: Run: pip install -r requirements.txt
-     Or:  pip install pandas openpyxl
+The lib/ folder may be missing or incomplete.
+FIX: Make sure you copied the ENTIRE PseudoBank folder, including lib/
 
 --------------------------------------------------------------------------------
 ERROR: "File not found"
@@ -190,53 +140,38 @@ ERROR: "File not found"
 The file path is wrong.
 FIX:
   - Check the path is correct
-  - Check the file extension (.xlsx vs .xls vs .csv)
   - Use quotes if there are spaces: "C:\My Reports\file.xlsx"
   - Try dragging the file into Command Prompt - this pastes the full path
 
 --------------------------------------------------------------------------------
-ERROR: Permission denied / Can't write to output folder
+PROBLEM: Nothing happens when I run the bat file
 --------------------------------------------------------------------------------
-FIX:
-  - Create the output folder manually if it doesn't exist
-  - Or run from a folder where you have write permissions (like Documents)
-
---------------------------------------------------------------------------------
-PROBLEM: Nothing happens when I double-click the .bat file
---------------------------------------------------------------------------------
-The window may be opening and closing too fast.
 FIX: Run from Command Prompt instead:
   1. Open Command Prompt
-  2. cd C:\PseudoBank
-  3. pseudobank.bat
+  2. cd C:\path\to\PseudoBank
+  3. pseudobank.bat "yourfile.xlsx"
 
 ================================================================================
   QUICK REFERENCE
 ================================================================================
 
 Navigate to folder:
-  cd C:\PseudoBank
+  cd C:\path\to\PseudoBank
 
-Install dependencies:
-  pip install -r requirements.txt
-
-Run with batch launcher:
+Run PseudoBank:
   pseudobank.bat "filename.xlsx"
 
-Run Python directly:
+Or run Python directly:
   python src/pseudonymize.py --input "filename.xlsx"
 
 Check Python version:
   python --version
 
-List files in current folder:
-  dir
-
 ================================================================================
   SUCCESS CHECKLIST
 ================================================================================
 
-[ ] Files extracted to your machine
+[ ] Entire PseudoBank folder copied to machine (including lib/)
 [ ] Python is installed (python --version works)
 [ ] Test run with sample_data/test_report.csv worked
 [ ] Test run with your own file worked
@@ -244,33 +179,16 @@ List files in current folder:
 [ ] Sanitized file looks correct (fake names, real numbers)
 
 ================================================================================
-  INSPECTING THE CODE (OPTIONAL)
+  SECURITY NOTE
 ================================================================================
 
-If you want to verify what this tool does before running it:
+This tool contains NO compiled executables. Everything is plain text:
 
-1. Open pseudobank.bat in Notepad
-   - You'll see it just checks for Python and runs the script
-   - No hidden commands
+  - pseudobank.bat     = Batch launcher (open in Notepad to inspect)
+  - src/pseudonymize.py = Main Python code (fully readable)
+  - lib/               = Standard Python libraries (pandas, openpyxl)
 
-2. Open src/pseudonymize.py in any text editor
-   - This is the main logic
-   - Look for the main() function to see the flow
-   - All it does is read files, replace values, and save new files
-
-3. Open src/config.py
-   - Just defines folder paths for input/output
-
-================================================================================
-  QUESTIONS?
-================================================================================
-
-If you run into issues not covered here:
-
-1. Note the exact error message
-2. Note what command you ran
-3. Note what folder you were in
-4. Bring this info back to discuss
+You can inspect every file before running it.
 
 ================================================================================
   Last Updated: 2025-12-17

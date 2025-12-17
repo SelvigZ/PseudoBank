@@ -2,6 +2,8 @@
 
 A data sanitization tool that replaces sensitive information with fake placeholders before sharing reports with AI tools.
 
+**No pip install needed** - all dependencies are bundled. Just copy the folder and run.
+
 ---
 
 ## Executive Summary
@@ -17,6 +19,20 @@ A data sanitization tool that replaces sensitive information with fake placehold
 - Runs completely offline
 - Random assignment prevents pattern analysis
 - **100% auditable** - all code is plain text Python, no compiled binaries
+- **No internet/pip required** - dependencies are bundled
+
+---
+
+## Quick Start
+
+**Requirements:** Python 3.x (no pip needed)
+
+**Run it:**
+```
+pseudobank.bat "path\to\your\report.xlsx"
+```
+
+That's it. No installation, no pip, no setup.
 
 ---
 
@@ -135,7 +151,7 @@ The tool runs entirely on your local machine:
 - No internet connection required
 - No data sent to external servers
 - No cloud storage
-- No external dependencies during operation
+- No pip install needed (dependencies bundled)
 
 ### 6. Selective Column Protection
 
@@ -151,6 +167,7 @@ Dollar amounts and dates are typically not sensitive and are needed for meaningf
 - `pseudobank.bat` - Simple batch launcher (open in Notepad to inspect)
 - `src/pseudonymize.py` - Main Python script (fully readable)
 - `src/config.py` - Configuration settings
+- `lib/` - Bundled Python libraries (pandas, openpyxl, etc.)
 
 Anyone can review exactly what this tool does before running it.
 
@@ -176,31 +193,18 @@ Anyone can review exactly what this tool does before running it.
 
 ### Requirements
 
-- Python 3.x
-- Dependencies: `pandas`, `openpyxl` (auto-installed by the launcher)
+- Python 3.x (that's it - no pip needed!)
 
-### Quick Start (Easiest)
+### Running PseudoBank
 
-Double-click `pseudobank.bat` or run from Command Prompt:
-
+**Option 1: Use the batch launcher**
 ```
 pseudobank.bat "C:\path\to\your\report.xlsx"
 ```
 
-The batch file will:
-1. Check if Python is installed
-2. Auto-install dependencies if needed
-3. Run the sanitization tool
-4. Prompt you through the process
-
-### Manual Method
-
-If you prefer to run the Python script directly:
-
-```bash
-cd PseudoBank
-pip install -r requirements.txt
-python src/pseudonymize.py --input "path/to/report.xlsx"
+**Option 2: Run Python directly**
+```
+python src/pseudonymize.py --input "C:\path\to\your\report.xlsx"
 ```
 
 ### Output Location
@@ -217,7 +221,11 @@ Sanitized files are created in the `output/` folder with the prefix `CLEAN_`:
 PseudoBank/
 ├── pseudobank.bat         # Easy launcher (double-click or run from cmd)
 ├── README.md              # This documentation
-├── requirements.txt       # Python dependencies
+├── SETUP_INSTRUCTIONS.txt # Step-by-step setup guide
+├── lib/                   # Bundled dependencies (no pip needed!)
+│   ├── pandas/
+│   ├── openpyxl/
+│   └── ...
 ├── src/
 │   ├── pseudonymize.py    # Main Python script
 │   └── config.py          # Folder settings
@@ -250,6 +258,10 @@ The tool handles this automatically. It assigns random numbers from 001-999, ens
 
 This tool is designed to help sanitize data *before* sharing. However, approval for use with specific data classifications should be verified with your Information Security Officer. The tool itself does not transmit any data - it only creates a local sanitized copy.
 
+### Why are the dependencies bundled?
+
+Many secure/restricted machines don't allow pip install or internet access. By bundling pandas and openpyxl in the `lib/` folder, you can just copy the entire PseudoBank folder to your machine and run it - no installation needed.
+
 ### Why no .exe file?
 
 Compiled executables are harder to audit and can raise security concerns. By keeping everything as plain text (Python scripts and batch files), anyone can open the files in Notepad and verify exactly what the tool does. This transparency is important for use in secure environments.
@@ -267,7 +279,7 @@ Compiled executables are harder to audit and can raise security concerns. By kee
 | Data transmission to external servers | Tool runs 100% offline on local machine |
 | Accidental sharing of original file | Original stays in place; sanitized copy created in separate output folder |
 | Hidden/malicious code in executables | **No executables** - all code is plain text Python, fully auditable |
-| External dependencies/packages | Only requires pandas and openpyxl (common, well-known data libraries) |
+| Need for pip/internet on secure machines | **Dependencies bundled** - no pip install required |
 
 ---
 
