@@ -66,6 +66,9 @@ If you see "'python' is not recognized...":
 
    pseudobank.bat
 
+   IMPORTANT: When prompted for a file path, do NOT type quotes!
+   Just paste or type the path directly, even if it has spaces.
+
 ================================================================================
   STEP 4: FOLLOW THE PROMPTS
 ================================================================================
@@ -133,6 +136,23 @@ ERROR: "No module named pandas" or similar
 --------------------------------------------------------------------------------
 The lib/ folder may be missing or incomplete.
 FIX: Make sure you copied the ENTIRE PseudoBank folder, including lib/
+
+--------------------------------------------------------------------------------
+ERROR: "numpy" import error or circular import
+--------------------------------------------------------------------------------
+This happens when bundled numpy conflicts with conda's numpy.
+FIX: Delete these folders from lib/ (if they exist):
+  - numpy
+  - numpy.libs
+  - numpy-*.dist-info
+The script will use conda's numpy instead, which works correctly.
+
+--------------------------------------------------------------------------------
+ERROR: "unrecognized arguments" with file path
+--------------------------------------------------------------------------------
+You probably typed quotes around the path when prompted.
+FIX: When the script asks for a file path, do NOT type quotes.
+Just paste/type the path directly: C:\My Folder\file.xlsx
 
 --------------------------------------------------------------------------------
 ERROR: "File not found"

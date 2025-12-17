@@ -202,7 +202,13 @@ Anyone can review exactly what this tool does before running it.
 pseudobank.bat "C:\path\to\your\report.xlsx"
 ```
 
-**Option 2: Run Python directly**
+**Option 2: Let it prompt you** (recommended for paths with spaces)
+```
+pseudobank.bat
+```
+Then enter your file path when prompted. **Do NOT type quotes** around the path - just paste it directly.
+
+**Option 3: Run Python directly**
 ```
 python src/pseudonymize.py --input "C:\path\to\your\report.xlsx"
 ```
@@ -261,6 +267,10 @@ This tool is designed to help sanitize data *before* sharing. However, approval 
 ### Why are the dependencies bundled?
 
 Many secure/restricted machines don't allow pip install or internet access. By bundling pandas and openpyxl in the `lib/` folder, you can just copy the entire PseudoBank folder to your machine and run it - no installation needed.
+
+### What about numpy? Why isn't it bundled?
+
+Numpy is **not** bundled because it conflicts with conda/Anaconda environments commonly found on government machines. The bundled pandas will use the system's numpy (from conda), which works correctly. If you bundle numpy separately, you'll get import errors.
 
 ### Why no .exe file?
 

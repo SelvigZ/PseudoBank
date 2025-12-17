@@ -6,7 +6,8 @@ REM
 REM  Usage: pseudobank.bat "path\to\your\file.xlsx"
 REM     Or: pseudobank.bat (will prompt for file path)
 REM
-REM  No pip install needed - all dependencies are bundled in the lib folder.
+REM  No pip install needed - dependencies are bundled in the lib folder.
+REM  Uses conda's numpy if available (do NOT bundle numpy separately).
 REM ============================================================================
 
 setlocal enabledelayedexpansion
@@ -34,6 +35,9 @@ if "%~1"=="" (
     echo ============================================
     echo.
     echo   No pip install needed - just run this!
+    echo.
+    echo   IMPORTANT: Do NOT type quotes around the path.
+    echo   Just paste or type the path directly.
     echo.
     set /p "INPUT_FILE=Enter the path to your file: "
 ) else (
