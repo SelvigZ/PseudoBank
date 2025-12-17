@@ -1,339 +1,265 @@
 ================================================================================
-  PSEUDOBANK - SECURE MACHINE SETUP INSTRUCTIONS
+  PSEUDOBANK - SETUP INSTRUCTIONS
 ================================================================================
 
-This guide walks you through testing PseudoBank on your secure machine.
+This guide walks you through setting up and running PseudoBank on your machine.
 Read through the whole thing first, then follow the steps.
 
 --------------------------------------------------------------------------------
   WHAT YOU NEED
 --------------------------------------------------------------------------------
 
-1. The PseudoBank files (either the ZIP from GitHub or just pseudobank.exe)
-2. A test Excel or CSV file to try it on
-3. Access to Command Prompt (cmd)
+1. Python 3.x installed on your machine
+2. The PseudoBank folder (from GitHub ZIP or git clone)
+3. A test Excel or CSV file to try it on
+4. Access to Command Prompt (cmd)
 
 --------------------------------------------------------------------------------
-  STEP 1: GET THE FILES ONTO YOUR SECURE MACHINE
+  SECURITY NOTE
 --------------------------------------------------------------------------------
 
-Option A: Download the whole repository
-  1. Go to: https://github.com/SelvigZ/PseudoBank
-  2. Click the green "Code" button
-  3. Click "Download ZIP"
-  4. Transfer the ZIP file to your secure machine
-  5. Extract/unzip the folder
+This tool contains NO compiled executables (.exe files). Everything is plain
+text that you can open and inspect:
 
-Option B: Download just the executable
-  1. Go to: https://github.com/SelvigZ/PseudoBank/blob/main/dist/pseudobank.exe
-  2. Click "Download" or the download icon (down arrow)
-  3. Transfer pseudobank.exe to your secure machine
+  - pseudobank.bat     = Batch launcher (open in Notepad to see what it does)
+  - src/pseudonymize.py = Main Python code (fully readable)
+  - src/config.py       = Configuration settings
 
---------------------------------------------------------------------------------
-  STEP 2: SET UP YOUR FOLDER STRUCTURE
---------------------------------------------------------------------------------
+This transparency ensures you can verify exactly what the tool does before
+running it on your secure machine.
 
-Create a folder somewhere easy to find. For example:
+================================================================================
+  STEP 1: GET THE FILES ONTO YOUR MACHINE
+================================================================================
 
-  C:\PseudoBank\
+1. Go to: https://github.com/SelvigZ/PseudoBank
+2. Click the green "Code" button
+3. Click "Download ZIP"
+4. Transfer the ZIP file to your machine (if needed)
+5. Extract/unzip the folder to a location like C:\PseudoBank
 
-Inside that folder, you should have:
+================================================================================
+  STEP 2: CHECK IF PYTHON IS INSTALLED
+================================================================================
 
-  C:\PseudoBank\
-      pseudobank.exe      <-- The program
-      output\             <-- Create this empty folder (for sanitized files)
+1. Open Command Prompt
+   - Press Windows key
+   - Type: cmd
+   - Press Enter
 
-If you downloaded the full ZIP, extract it and you'll have:
+2. Check Python version:
 
-  C:\PseudoBank\
-      pseudobank.exe      (inside the dist\ folder)
-      sample_data\        (contains test_report.csv)
-      output\             (may need to create this)
-      src\                (Python source code - not needed to run)
-      README.md           (documentation)
+   python --version
 
---------------------------------------------------------------------------------
-  STEP 3: OPEN COMMAND PROMPT
---------------------------------------------------------------------------------
+3. You should see something like: Python 3.11.4
 
-Method 1: Search
-  1. Click the Start menu (Windows icon)
-  2. Type: cmd
-  3. Click "Command Prompt"
+If you see "'python' is not recognized...":
+   - Python is not installed
+   - Contact IT about getting Python installed, OR
+   - Download from python.org if you have permission
 
-Method 2: Run dialog
-  1. Press Windows key + R
-  2. Type: cmd
-  3. Press Enter
+================================================================================
+  STEP 3: RUN PSEUDOBANK
+================================================================================
 
-You should see a black window with white text showing something like:
-  C:\Users\YourName>
+You have two options:
 
 --------------------------------------------------------------------------------
-  STEP 4: NAVIGATE TO YOUR FOLDER
+  OPTION A: Use the Batch Launcher (Easiest)
 --------------------------------------------------------------------------------
 
-In Command Prompt, type this command (adjust the path to where you put it):
+1. Open Command Prompt
 
-  cd C:\PseudoBank\dist
+2. Navigate to the PseudoBank folder:
 
-Or if you put pseudobank.exe directly in C:\PseudoBank:
+   cd C:\PseudoBank
 
-  cd C:\PseudoBank
+3. Run with your file:
 
-Press Enter after typing the command.
+   pseudobank.bat "C:\path\to\your\report.xlsx"
 
-The prompt should now show:
-  C:\PseudoBank\dist>
+   Or just run it and it will prompt you for the file path:
 
---------------------------------------------------------------------------------
-  STEP 5: TEST WITH THE SAMPLE FILE
---------------------------------------------------------------------------------
+   pseudobank.bat
 
-If you downloaded the full ZIP, there's a test file included.
-
-Type this command:
-
-  pseudobank.exe --input ..\sample_data\test_report.csv
-
-Press Enter.
-
-You should see:
-  - A welcome message
-  - A list of columns in the file
-  - Prompts asking which columns to hide
-
-Follow the interactive prompts:
-  1. When asked which columns to hide, type: 1, 2
-     (This selects "Vendor Name" and "Program")
-  2. When asked for a prefix for Vendor Name, type: Vendor
-  3. When asked for a prefix for Program, type: Program
-  4. When asked to confirm, type: y
-
-The sanitized file will be created in the output\ folder.
+The batch file will automatically:
+  - Check if Python is installed
+  - Install required libraries (pandas, openpyxl) if needed
+  - Run the sanitization tool
 
 --------------------------------------------------------------------------------
-  STEP 6: TEST WITH YOUR OWN FILE
+  OPTION B: Run Python Directly
 --------------------------------------------------------------------------------
 
-Once the sample works, try your own report:
+1. Open Command Prompt
 
-  pseudobank.exe --input "C:\path\to\your\report.xlsx"
+2. Navigate to the PseudoBank folder:
 
-IMPORTANT: If your file path has spaces, wrap it in quotes:
+   cd C:\PseudoBank
 
-  CORRECT:   pseudobank.exe --input "C:\My Reports\quarterly.xlsx"
-  INCORRECT: pseudobank.exe --input C:\My Reports\quarterly.xlsx
+3. Install dependencies (first time only):
 
---------------------------------------------------------------------------------
-  STEP 7: FIND YOUR SANITIZED FILE
---------------------------------------------------------------------------------
+   pip install -r requirements.txt
 
-After running, check the output\ folder. Your sanitized file will be named:
+4. Run the script:
+
+   python src/pseudonymize.py --input "C:\path\to\your\report.xlsx"
+
+================================================================================
+  STEP 4: FOLLOW THE PROMPTS
+================================================================================
+
+When the tool runs, you'll see:
+
+1. A welcome message
+2. A list of columns in your file (numbered)
+3. A prompt asking which columns to hide
+
+Example interaction:
+
+  Available columns:
+    1. Vendor Name
+    2. Program
+    3. Amount
+    4. Date
+
+  Enter column numbers to sanitize (comma-separated): 1, 2
+
+  Enter prefix for 'Vendor Name': Vendor
+  Enter prefix for 'Program': Program
+
+  Confirm? (y/n): y
+
+================================================================================
+  STEP 5: FIND YOUR SANITIZED FILE
+================================================================================
+
+After running, check the output/ folder. Your sanitized file will be named:
 
   CLEAN_[original filename].xlsx
 
 For example:
   Original:  quarterly_report.xlsx
-  Sanitized: CLEAN_quarterly_report.xlsx
+  Sanitized: output/CLEAN_quarterly_report.xlsx
 
 Open it in Excel and verify:
-  - Vendor names are now Vendor_XXX (random numbers)
+  - Selected columns now show fake names (Vendor_047, Program_093, etc.)
   - Dollar amounts are unchanged
   - Column headers are unchanged
+  - Dates are unchanged
 
 ================================================================================
-  TROUBLESHOOTING - COMMON ERRORS AND FIXES
+  STEP 6: TEST WITH SAMPLE DATA FIRST
 ================================================================================
 
---------------------------------------------------------------------------------
-ERROR: "'pseudobank.exe' is not recognized as an internal or external command"
---------------------------------------------------------------------------------
+Before using your real data, test with the included sample:
 
-CAUSE: You're not in the right folder, or the file isn't there.
+  pseudobank.bat sample_data/test_report.csv
 
-FIX:
-  1. Make sure you're in the folder containing pseudobank.exe
-  2. Type: dir
-     This lists all files in the current folder
-  3. Look for pseudobank.exe in the list
-  4. If it's not there, navigate to the correct folder with: cd [path]
+Or:
 
-EXAMPLE:
-  C:\Users\You> cd C:\PseudoBank\dist
-  C:\PseudoBank\dist> dir
-  [You should see pseudobank.exe listed]
-  C:\PseudoBank\dist> pseudobank.exe --input test.xlsx
+  python src/pseudonymize.py --input sample_data/test_report.csv
 
---------------------------------------------------------------------------------
-ERROR: "File not found: [filename]"
---------------------------------------------------------------------------------
-
-CAUSE: The file path is wrong or the file doesn't exist.
-
-FIX:
-  1. Check the file path is correct
-  2. Check the file extension (.xlsx vs .xls vs .csv)
-  3. Use the full path with quotes if there are spaces
-  4. Try dragging the file into the Command Prompt window - this pastes the path
-
-EXAMPLE:
-  pseudobank.exe --input "C:\Users\You\Documents\Reports\Q4 Report.xlsx"
-
---------------------------------------------------------------------------------
-ERROR: "Windows protected your PC" / SmartScreen warning
---------------------------------------------------------------------------------
-
-CAUSE: Windows doesn't recognize the .exe because it's new/unsigned.
-
-FIX:
-  1. Click "More info"
-  2. Click "Run anyway"
-
-This is normal for new executables that haven't been widely distributed.
-The code is open source - you can review it on GitHub if concerned.
-
---------------------------------------------------------------------------------
-ERROR: "Unsupported file type"
---------------------------------------------------------------------------------
-
-CAUSE: The file isn't .csv, .xlsx, or .xls
-
-FIX:
-  - Save your file as one of the supported formats
-  - In Excel: File > Save As > choose "Excel Workbook (.xlsx)" or "CSV"
-
---------------------------------------------------------------------------------
-ERROR: Program closes immediately without showing anything
---------------------------------------------------------------------------------
-
-CAUSE: You may have double-clicked the .exe instead of running from Command Prompt.
-
-FIX:
-  1. Don't double-click the .exe
-  2. Open Command Prompt first
-  3. Navigate to the folder
-  4. Run with: pseudobank.exe --input yourfile.xlsx
-
---------------------------------------------------------------------------------
-ERROR: "Permission denied" or can't write to output folder
---------------------------------------------------------------------------------
-
-CAUSE: The output folder doesn't exist or you don't have write access.
-
-FIX:
-  1. Create the output folder manually:
-     - Open File Explorer
-     - Navigate to where pseudobank.exe is
-     - Right-click > New > Folder
-     - Name it: output
-
-  2. Or run from a folder where you have write permissions (like Documents)
-
---------------------------------------------------------------------------------
-ERROR: Antivirus blocks or quarantines the file
---------------------------------------------------------------------------------
-
-CAUSE: Some antivirus software flags unknown executables.
-
-FIX:
-  1. Add an exception for pseudobank.exe in your antivirus
-  2. Or run the Python script version instead (requires Python installed):
-     python pseudonymize.py --input yourfile.xlsx
+This lets you see how the tool works without risking any real data.
 
 ================================================================================
-  OFF-RAMPS: WHAT TO DO IF THINGS REALLY DON'T WORK
+  TROUBLESHOOTING
 ================================================================================
 
 --------------------------------------------------------------------------------
-OFF-RAMP 1: Use the Python Script Instead
+ERROR: "'python' is not recognized"
 --------------------------------------------------------------------------------
+Python isn't installed or isn't in your PATH.
+FIX: Contact IT about Python installation.
 
-If the .exe doesn't work but Python is installed on the secure machine:
+--------------------------------------------------------------------------------
+ERROR: "'pip' is not recognized"
+--------------------------------------------------------------------------------
+FIX: Try using: python -m pip install -r requirements.txt
 
+--------------------------------------------------------------------------------
+ERROR: "No module named pandas" or "No module named openpyxl"
+--------------------------------------------------------------------------------
+Dependencies weren't installed.
+FIX: Run: pip install -r requirements.txt
+     Or:  pip install pandas openpyxl
+
+--------------------------------------------------------------------------------
+ERROR: "File not found"
+--------------------------------------------------------------------------------
+The file path is wrong.
+FIX:
+  - Check the path is correct
+  - Check the file extension (.xlsx vs .xls vs .csv)
+  - Use quotes if there are spaces: "C:\My Reports\file.xlsx"
+  - Try dragging the file into Command Prompt - this pastes the full path
+
+--------------------------------------------------------------------------------
+ERROR: Permission denied / Can't write to output folder
+--------------------------------------------------------------------------------
+FIX:
+  - Create the output folder manually if it doesn't exist
+  - Or run from a folder where you have write permissions (like Documents)
+
+--------------------------------------------------------------------------------
+PROBLEM: Nothing happens when I double-click the .bat file
+--------------------------------------------------------------------------------
+The window may be opening and closing too fast.
+FIX: Run from Command Prompt instead:
   1. Open Command Prompt
-  2. Check if Python exists: python --version
-  3. If Python is installed, navigate to the src\ folder:
-     cd C:\PseudoBank\src
-  4. Install dependencies (if pip works):
-     pip install pandas openpyxl
-  5. Run the script:
-     python pseudonymize.py --input "path\to\file.xlsx"
-
---------------------------------------------------------------------------------
-OFF-RAMP 2: Manual Pseudonymization in Excel
---------------------------------------------------------------------------------
-
-If nothing works, you can do this manually in Excel:
-
-  1. Open your report
-  2. Copy the Vendor Name column
-  3. Paste into a new sheet
-  4. Remove duplicates (Data > Remove Duplicates)
-  5. In column B, create fake names: Vendor_001, Vendor_002, etc.
-  6. Go back to original sheet
-  7. Use VLOOKUP or Find & Replace to swap real names for fake ones
-  8. Save as a new file
-
-This is tedious but works in a pinch.
-
---------------------------------------------------------------------------------
-OFF-RAMP 3: Describe Structure Instead of Sharing Data
---------------------------------------------------------------------------------
-
-If you can't sanitize the data, describe it to the AI instead:
-
-Instead of sharing the file, say:
-  "I have a report with columns: Vendor Name, Program, Amount, Date.
-   I want to create a pivot table showing total Amount by Vendor.
-   How do I do this in Python/Excel?"
-
-The AI can write code based on column names without seeing actual data.
-
---------------------------------------------------------------------------------
-OFF-RAMP 4: Contact Your IT Department
---------------------------------------------------------------------------------
-
-If you're getting permission errors or security blocks:
-
-  1. Document the error message (screenshot it)
-  2. Contact IT and explain:
-     - This is a local-only data sanitization tool
-     - It doesn't connect to the internet
-     - It's open source (they can review the code)
-     - You need it to safely share report structures with AI tools
+  2. cd C:\PseudoBank
+  3. pseudobank.bat
 
 ================================================================================
-  QUICK REFERENCE - COMMON COMMANDS
+  QUICK REFERENCE
 ================================================================================
 
 Navigate to folder:
-  cd C:\PseudoBank\dist
+  cd C:\PseudoBank
+
+Install dependencies:
+  pip install -r requirements.txt
+
+Run with batch launcher:
+  pseudobank.bat "filename.xlsx"
+
+Run Python directly:
+  python src/pseudonymize.py --input "filename.xlsx"
+
+Check Python version:
+  python --version
 
 List files in current folder:
   dir
-
-Run PseudoBank:
-  pseudobank.exe --input "filename.xlsx"
-
-Run with full path:
-  pseudobank.exe --input "C:\Users\You\Documents\report.xlsx"
-
-Check if Python is installed (for off-ramp):
-  python --version
 
 ================================================================================
   SUCCESS CHECKLIST
 ================================================================================
 
-[ ] File transferred to secure machine
-[ ] Folder structure set up (pseudobank.exe + output folder)
-[ ] Command Prompt opened
-[ ] Navigated to correct folder
-[ ] Test run with sample file worked
-[ ] Test run with own file worked
-[ ] Sanitized file appears in output folder
+[ ] Files extracted to your machine
+[ ] Python is installed (python --version works)
+[ ] Test run with sample_data/test_report.csv worked
+[ ] Test run with your own file worked
+[ ] Sanitized file appears in output/ folder
 [ ] Sanitized file looks correct (fake names, real numbers)
+
+================================================================================
+  INSPECTING THE CODE (OPTIONAL)
+================================================================================
+
+If you want to verify what this tool does before running it:
+
+1. Open pseudobank.bat in Notepad
+   - You'll see it just checks for Python and runs the script
+   - No hidden commands
+
+2. Open src/pseudonymize.py in any text editor
+   - This is the main logic
+   - Look for the main() function to see the flow
+   - All it does is read files, replace values, and save new files
+
+3. Open src/config.py
+   - Just defines folder paths for input/output
 
 ================================================================================
   QUESTIONS?
@@ -346,8 +272,6 @@ If you run into issues not covered here:
 3. Note what folder you were in
 4. Bring this info back to discuss
 
-Good luck!
-
 ================================================================================
-  Last Updated: 2025-12-16
+  Last Updated: 2025-12-17
 ================================================================================

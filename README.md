@@ -16,6 +16,7 @@ A data sanitization tool that replaces sensitive information with fake placehold
 - No decryption keys or stored mappings to protect
 - Runs completely offline
 - Random assignment prevents pattern analysis
+- **100% auditable** - all code is plain text Python, no compiled binaries
 
 ---
 
@@ -70,8 +71,8 @@ PseudoBank creates a sanitized copy:
 │    STAYS HERE                                    SAFE TO SHARE      │
 │    (never shared)                                                   │
 └─────────────────────────────────────────────────────────────────────┘
-                                                         │
-                                                         ▼
+                                                        │
+                                                        ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │  EXTERNAL AI TOOL (Claude, etc.)                                    │
 │                                                                     │
@@ -81,8 +82,8 @@ PseudoBank creates a sanitized copy:
 │                                                                     │
 │    NEVER SEES: Real vendor names, real program names                │
 └─────────────────────────────────────────────────────────────────────┘
-                                                         │
-                                                         ▼
+                                                        │
+                                                        ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │  BACK IN SECURE ENVIRONMENT                                         │
 │                                                                     │
@@ -144,6 +145,15 @@ You choose which columns to sanitize:
 
 Dollar amounts and dates are typically not sensitive and are needed for meaningful analysis.
 
+### 7. Fully Auditable Code
+
+**No compiled executables.** Every file in this project is plain text:
+- `pseudobank.bat` - Simple batch launcher (open in Notepad to inspect)
+- `src/pseudonymize.py` - Main Python script (fully readable)
+- `src/config.py` - Configuration settings
+
+Anyone can review exactly what this tool does before running it.
+
 ---
 
 ## What Data Is Protected vs. Shared
@@ -164,56 +174,40 @@ Dollar amounts and dates are typically not sensitive and are needed for meaningf
 
 ## Installation & Usage
 
-### Option A: Standalone Executable (Recommended for Secure Machines)
+### Requirements
 
-**No Python installation required.** The `.exe` file includes everything needed.
+- Python 3.x
+- Dependencies: `pandas`, `openpyxl` (auto-installed by the launcher)
 
-1. Download `pseudobank.exe` from the `dist/` folder
-2. Place it anywhere on your machine
-3. Open Command Prompt and run:
+### Quick Start (Easiest)
 
-```
-pseudobank.exe --input "C:\path\to\your\report.xlsx"
-```
-
-Or, for a file in the same folder:
+Double-click `pseudobank.bat` or run from Command Prompt:
 
 ```
-pseudobank.exe --input report.xlsx
+pseudobank.bat "C:\path\to\your\report.xlsx"
 ```
 
-**Output location:** Sanitized files are created in an `output/` folder in the same directory as the executable.
+The batch file will:
+1. Check if Python is installed
+2. Auto-install dependencies if needed
+3. Run the sanitization tool
+4. Prompt you through the process
 
-**Why use the .exe?**
-- No Python installation needed
-- No pip install needed
-- No internet connection needed
-- Single file contains everything
-- Ideal for air-gapped/secure environments
+### Manual Method
 
----
+If you prefer to run the Python script directly:
 
-### Option B: Python Script (For Development Machines)
-
-If you have Python installed and want to modify the source code:
-
-**Requirements:**
-```
-Python 3.x
-pandas
-openpyxl
-```
-
-**Installation:**
 ```bash
-pip install pandas openpyxl
+cd PseudoBank
+pip install -r requirements.txt
+python src/pseudonymize.py --input "path/to/report.xlsx"
 ```
 
-**Usage:**
-```bash
-cd PseudoBank/src
-python pseudonymize.py --input "path/to/report.xlsx"
-```
+### Output Location
+
+Sanitized files are created in the `output/` folder with the prefix `CLEAN_`:
+- Original: `quarterly_report.xlsx`
+- Sanitized: `output/CLEAN_quarterly_report.xlsx`
 
 ---
 
@@ -221,11 +215,11 @@ python pseudonymize.py --input "path/to/report.xlsx"
 
 ```
 PseudoBank/
+├── pseudobank.bat         # Easy launcher (double-click or run from cmd)
 ├── README.md              # This documentation
-├── dist/
-│   └── pseudobank.exe     # Standalone executable (no Python needed)
+├── requirements.txt       # Python dependencies
 ├── src/
-│   ├── pseudonymize.py    # Python source code
+│   ├── pseudonymize.py    # Main Python script
 │   └── config.py          # Folder settings
 ├── sample_data/           # Example input files
 └── output/                # Sanitized files appear here
@@ -256,6 +250,10 @@ The tool handles this automatically. It assigns random numbers from 001-999, ens
 
 This tool is designed to help sanitize data *before* sharing. However, approval for use with specific data classifications should be verified with your Information Security Officer. The tool itself does not transmit any data - it only creates a local sanitized copy.
 
+### Why no .exe file?
+
+Compiled executables are harder to audit and can raise security concerns. By keeping everything as plain text (Python scripts and batch files), anyone can open the files in Notepad and verify exactly what the tool does. This transparency is important for use in secure environments.
+
 ---
 
 ## Summary for Security Review
@@ -268,24 +266,9 @@ This tool is designed to help sanitize data *before* sharing. However, approval 
 | Stored mapping files as vulnerability | No mappings stored - each session is independent |
 | Data transmission to external servers | Tool runs 100% offline on local machine |
 | Accidental sharing of original file | Original stays in place; sanitized copy created in separate output folder |
-| Software installation on secure machines | Standalone .exe requires no installation - just copy and run |
-| External dependencies/packages | .exe bundles all dependencies - no pip/internet required |
-
-### About the Standalone Executable
-
-The `pseudobank.exe` file is a self-contained application that includes:
-- Python runtime (embedded)
-- All required libraries (pandas, openpyxl, etc.)
-- The PseudoBank application code
-
-**Security characteristics:**
-- Does not require administrator privileges to run
-- Does not install anything on the system
-- Does not modify system files or registry
-- Does not require internet access
-- Can be deleted by simply removing the file
-- Can be scanned by antivirus software before use
+| Hidden/malicious code in executables | **No executables** - all code is plain text Python, fully auditable |
+| External dependencies/packages | Only requires pandas and openpyxl (common, well-known data libraries) |
 
 ---
 
-*Last Updated: 2025-12-16*
+*Last Updated: 2025-12-17*
