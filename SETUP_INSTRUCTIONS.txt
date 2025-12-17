@@ -1,0 +1,353 @@
+================================================================================
+  PSEUDOBANK - SECURE MACHINE SETUP INSTRUCTIONS
+================================================================================
+
+This guide walks you through testing PseudoBank on your secure machine.
+Read through the whole thing first, then follow the steps.
+
+--------------------------------------------------------------------------------
+  WHAT YOU NEED
+--------------------------------------------------------------------------------
+
+1. The PseudoBank files (either the ZIP from GitHub or just pseudobank.exe)
+2. A test Excel or CSV file to try it on
+3. Access to Command Prompt (cmd)
+
+--------------------------------------------------------------------------------
+  STEP 1: GET THE FILES ONTO YOUR SECURE MACHINE
+--------------------------------------------------------------------------------
+
+Option A: Download the whole repository
+  1. Go to: https://github.com/SelvigZ/PseudoBank
+  2. Click the green "Code" button
+  3. Click "Download ZIP"
+  4. Transfer the ZIP file to your secure machine
+  5. Extract/unzip the folder
+
+Option B: Download just the executable
+  1. Go to: https://github.com/SelvigZ/PseudoBank/blob/main/dist/pseudobank.exe
+  2. Click "Download" or the download icon (down arrow)
+  3. Transfer pseudobank.exe to your secure machine
+
+--------------------------------------------------------------------------------
+  STEP 2: SET UP YOUR FOLDER STRUCTURE
+--------------------------------------------------------------------------------
+
+Create a folder somewhere easy to find. For example:
+
+  C:\PseudoBank\
+
+Inside that folder, you should have:
+
+  C:\PseudoBank\
+      pseudobank.exe      <-- The program
+      output\             <-- Create this empty folder (for sanitized files)
+
+If you downloaded the full ZIP, extract it and you'll have:
+
+  C:\PseudoBank\
+      pseudobank.exe      (inside the dist\ folder)
+      sample_data\        (contains test_report.csv)
+      output\             (may need to create this)
+      src\                (Python source code - not needed to run)
+      README.md           (documentation)
+
+--------------------------------------------------------------------------------
+  STEP 3: OPEN COMMAND PROMPT
+--------------------------------------------------------------------------------
+
+Method 1: Search
+  1. Click the Start menu (Windows icon)
+  2. Type: cmd
+  3. Click "Command Prompt"
+
+Method 2: Run dialog
+  1. Press Windows key + R
+  2. Type: cmd
+  3. Press Enter
+
+You should see a black window with white text showing something like:
+  C:\Users\YourName>
+
+--------------------------------------------------------------------------------
+  STEP 4: NAVIGATE TO YOUR FOLDER
+--------------------------------------------------------------------------------
+
+In Command Prompt, type this command (adjust the path to where you put it):
+
+  cd C:\PseudoBank\dist
+
+Or if you put pseudobank.exe directly in C:\PseudoBank:
+
+  cd C:\PseudoBank
+
+Press Enter after typing the command.
+
+The prompt should now show:
+  C:\PseudoBank\dist>
+
+--------------------------------------------------------------------------------
+  STEP 5: TEST WITH THE SAMPLE FILE
+--------------------------------------------------------------------------------
+
+If you downloaded the full ZIP, there's a test file included.
+
+Type this command:
+
+  pseudobank.exe --input ..\sample_data\test_report.csv
+
+Press Enter.
+
+You should see:
+  - A welcome message
+  - A list of columns in the file
+  - Prompts asking which columns to hide
+
+Follow the interactive prompts:
+  1. When asked which columns to hide, type: 1, 2
+     (This selects "Vendor Name" and "Program")
+  2. When asked for a prefix for Vendor Name, type: Vendor
+  3. When asked for a prefix for Program, type: Program
+  4. When asked to confirm, type: y
+
+The sanitized file will be created in the output\ folder.
+
+--------------------------------------------------------------------------------
+  STEP 6: TEST WITH YOUR OWN FILE
+--------------------------------------------------------------------------------
+
+Once the sample works, try your own report:
+
+  pseudobank.exe --input "C:\path\to\your\report.xlsx"
+
+IMPORTANT: If your file path has spaces, wrap it in quotes:
+
+  CORRECT:   pseudobank.exe --input "C:\My Reports\quarterly.xlsx"
+  INCORRECT: pseudobank.exe --input C:\My Reports\quarterly.xlsx
+
+--------------------------------------------------------------------------------
+  STEP 7: FIND YOUR SANITIZED FILE
+--------------------------------------------------------------------------------
+
+After running, check the output\ folder. Your sanitized file will be named:
+
+  CLEAN_[original filename].xlsx
+
+For example:
+  Original:  quarterly_report.xlsx
+  Sanitized: CLEAN_quarterly_report.xlsx
+
+Open it in Excel and verify:
+  - Vendor names are now Vendor_XXX (random numbers)
+  - Dollar amounts are unchanged
+  - Column headers are unchanged
+
+================================================================================
+  TROUBLESHOOTING - COMMON ERRORS AND FIXES
+================================================================================
+
+--------------------------------------------------------------------------------
+ERROR: "'pseudobank.exe' is not recognized as an internal or external command"
+--------------------------------------------------------------------------------
+
+CAUSE: You're not in the right folder, or the file isn't there.
+
+FIX:
+  1. Make sure you're in the folder containing pseudobank.exe
+  2. Type: dir
+     This lists all files in the current folder
+  3. Look for pseudobank.exe in the list
+  4. If it's not there, navigate to the correct folder with: cd [path]
+
+EXAMPLE:
+  C:\Users\You> cd C:\PseudoBank\dist
+  C:\PseudoBank\dist> dir
+  [You should see pseudobank.exe listed]
+  C:\PseudoBank\dist> pseudobank.exe --input test.xlsx
+
+--------------------------------------------------------------------------------
+ERROR: "File not found: [filename]"
+--------------------------------------------------------------------------------
+
+CAUSE: The file path is wrong or the file doesn't exist.
+
+FIX:
+  1. Check the file path is correct
+  2. Check the file extension (.xlsx vs .xls vs .csv)
+  3. Use the full path with quotes if there are spaces
+  4. Try dragging the file into the Command Prompt window - this pastes the path
+
+EXAMPLE:
+  pseudobank.exe --input "C:\Users\You\Documents\Reports\Q4 Report.xlsx"
+
+--------------------------------------------------------------------------------
+ERROR: "Windows protected your PC" / SmartScreen warning
+--------------------------------------------------------------------------------
+
+CAUSE: Windows doesn't recognize the .exe because it's new/unsigned.
+
+FIX:
+  1. Click "More info"
+  2. Click "Run anyway"
+
+This is normal for new executables that haven't been widely distributed.
+The code is open source - you can review it on GitHub if concerned.
+
+--------------------------------------------------------------------------------
+ERROR: "Unsupported file type"
+--------------------------------------------------------------------------------
+
+CAUSE: The file isn't .csv, .xlsx, or .xls
+
+FIX:
+  - Save your file as one of the supported formats
+  - In Excel: File > Save As > choose "Excel Workbook (.xlsx)" or "CSV"
+
+--------------------------------------------------------------------------------
+ERROR: Program closes immediately without showing anything
+--------------------------------------------------------------------------------
+
+CAUSE: You may have double-clicked the .exe instead of running from Command Prompt.
+
+FIX:
+  1. Don't double-click the .exe
+  2. Open Command Prompt first
+  3. Navigate to the folder
+  4. Run with: pseudobank.exe --input yourfile.xlsx
+
+--------------------------------------------------------------------------------
+ERROR: "Permission denied" or can't write to output folder
+--------------------------------------------------------------------------------
+
+CAUSE: The output folder doesn't exist or you don't have write access.
+
+FIX:
+  1. Create the output folder manually:
+     - Open File Explorer
+     - Navigate to where pseudobank.exe is
+     - Right-click > New > Folder
+     - Name it: output
+
+  2. Or run from a folder where you have write permissions (like Documents)
+
+--------------------------------------------------------------------------------
+ERROR: Antivirus blocks or quarantines the file
+--------------------------------------------------------------------------------
+
+CAUSE: Some antivirus software flags unknown executables.
+
+FIX:
+  1. Add an exception for pseudobank.exe in your antivirus
+  2. Or run the Python script version instead (requires Python installed):
+     python pseudonymize.py --input yourfile.xlsx
+
+================================================================================
+  OFF-RAMPS: WHAT TO DO IF THINGS REALLY DON'T WORK
+================================================================================
+
+--------------------------------------------------------------------------------
+OFF-RAMP 1: Use the Python Script Instead
+--------------------------------------------------------------------------------
+
+If the .exe doesn't work but Python is installed on the secure machine:
+
+  1. Open Command Prompt
+  2. Check if Python exists: python --version
+  3. If Python is installed, navigate to the src\ folder:
+     cd C:\PseudoBank\src
+  4. Install dependencies (if pip works):
+     pip install pandas openpyxl
+  5. Run the script:
+     python pseudonymize.py --input "path\to\file.xlsx"
+
+--------------------------------------------------------------------------------
+OFF-RAMP 2: Manual Pseudonymization in Excel
+--------------------------------------------------------------------------------
+
+If nothing works, you can do this manually in Excel:
+
+  1. Open your report
+  2. Copy the Vendor Name column
+  3. Paste into a new sheet
+  4. Remove duplicates (Data > Remove Duplicates)
+  5. In column B, create fake names: Vendor_001, Vendor_002, etc.
+  6. Go back to original sheet
+  7. Use VLOOKUP or Find & Replace to swap real names for fake ones
+  8. Save as a new file
+
+This is tedious but works in a pinch.
+
+--------------------------------------------------------------------------------
+OFF-RAMP 3: Describe Structure Instead of Sharing Data
+--------------------------------------------------------------------------------
+
+If you can't sanitize the data, describe it to the AI instead:
+
+Instead of sharing the file, say:
+  "I have a report with columns: Vendor Name, Program, Amount, Date.
+   I want to create a pivot table showing total Amount by Vendor.
+   How do I do this in Python/Excel?"
+
+The AI can write code based on column names without seeing actual data.
+
+--------------------------------------------------------------------------------
+OFF-RAMP 4: Contact Your IT Department
+--------------------------------------------------------------------------------
+
+If you're getting permission errors or security blocks:
+
+  1. Document the error message (screenshot it)
+  2. Contact IT and explain:
+     - This is a local-only data sanitization tool
+     - It doesn't connect to the internet
+     - It's open source (they can review the code)
+     - You need it to safely share report structures with AI tools
+
+================================================================================
+  QUICK REFERENCE - COMMON COMMANDS
+================================================================================
+
+Navigate to folder:
+  cd C:\PseudoBank\dist
+
+List files in current folder:
+  dir
+
+Run PseudoBank:
+  pseudobank.exe --input "filename.xlsx"
+
+Run with full path:
+  pseudobank.exe --input "C:\Users\You\Documents\report.xlsx"
+
+Check if Python is installed (for off-ramp):
+  python --version
+
+================================================================================
+  SUCCESS CHECKLIST
+================================================================================
+
+[ ] File transferred to secure machine
+[ ] Folder structure set up (pseudobank.exe + output folder)
+[ ] Command Prompt opened
+[ ] Navigated to correct folder
+[ ] Test run with sample file worked
+[ ] Test run with own file worked
+[ ] Sanitized file appears in output folder
+[ ] Sanitized file looks correct (fake names, real numbers)
+
+================================================================================
+  QUESTIONS?
+================================================================================
+
+If you run into issues not covered here:
+
+1. Note the exact error message
+2. Note what command you ran
+3. Note what folder you were in
+4. Bring this info back to discuss
+
+Good luck!
+
+================================================================================
+  Last Updated: 2025-12-16
+================================================================================
